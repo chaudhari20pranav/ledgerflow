@@ -387,9 +387,9 @@
                                     <label class="fw-bold mb-3">Budget Utilization</label>
                                     <div class="progress" style="height: 30px;">
                                         <div class="progress-bar" 
-                                            th:style="'width: ' + ${(metrics.totalExpenses / metrics.monthlyBudget) * 100} + '%'"
+                                            th:style="'width: ' + (metrics.monthlyBudget > 0 ? (metrics.totalExpenses / metrics.monthlyBudget) * 100 : 0) + '%'"
                                             th:classappend="${(metrics.totalExpenses / metrics.monthlyBudget) > 1 ? 'bg-danger' : 'bg-success'}">
-                                            <span th:text="${#numbers.formatDecimal((metrics.totalExpenses / metrics.monthlyBudget) * 100, 1, 1) + '%'}"></span>
+                                            <span th:text="${metrics.monthlyBudget > 0 ? #numbers.formatDecimal((metrics.totalExpenses / metrics.monthlyBudget) * 100, 1, 1) + '%' : '0%'}"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -411,11 +411,11 @@
                             </div>
                             <div class="col-md-4">
                                 <h6 class="text-muted">Profit Margin</h6>
-                                <h4 th:text="${#numbers.formatDecimal((metrics.netProfit / metrics.totalIncome) * 100, 1, 1) + '%'}">0%</h4>
+                                <h4 th:text="${metrics.totalIncome > 0 ? #numbers.formatDecimal((metrics.netProfit / metrics.totalIncome) * 100, 1, 1) + '%' : '0%'}"></h4>
                             </div>
                             <div class="col-md-4">
                                 <h6 class="text-muted">Expense Ratio</h6>
-                                <h4 th:text="${#numbers.formatDecimal((metrics.totalExpenses / metrics.totalIncome) * 100, 1, 1) + '%'}">0%</h4>
+                                <h4 <h4 th:text="${metrics.totalIncome > 0 ? #numbers.formatDecimal((metrics.totalExpenses / metrics.totalIncome) * 100, 1, 1) + '%' : '0%'}">0%</h4></h4>
                             </div>
                         </div>
                     </div>
