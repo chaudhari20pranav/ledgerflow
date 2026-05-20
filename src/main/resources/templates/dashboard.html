@@ -247,11 +247,13 @@
             </div>
             <div class="mt-4 budget-bar-wrap">
               <div class="budget-pct-label"
-                   th:text="${metrics.monthlyBudget > 0 ? #numbers.formatDecimal((metrics.totalExpenses / metrics.monthlyBudget) * 100, 1, 1) + '%' : '0%'}"></div>
+     th:text="${metrics.monthlyBudget != null and metrics.monthlyBudget.compareTo(T(java.math.BigDecimal).ZERO) > 0 ? #numbers.formatDecimal(metrics.totalExpenses.multiply(T(java.math.BigDecimal).valueOf(100)).divide(metrics.monthlyBudget, 2, T(java.math.RoundingMode).HALF_UP), 1, 'DEFAULT', 1, 'DEFAULT') + '%' : '0%'}"></div>
               <div class="progress" style="height:10px;">
-                <div class="progress-bar"
-     th:classappend="${(metrics.totalExpenses / metrics.monthlyBudget) > 1 ? 'bg-danger' : 'bg-success'}"
-     th:style="${'width: ' + (metrics.monthlyBudget != null and metrics.monthlyBudget > 0 ? T(java.lang.Math).min(((metrics.totalExpenses.doubleValue() / metrics.monthlyBudget.doubleValue()) * 100), 100) : 0) + '%'}">
+    <div class="progress-bar"
+         th:with="pct=${metrics.monthlyBudget != null and metrics.monthlyBudget.compareTo(T(java.math.BigDecimal).ZERO) > 0 ? metrics.totalExpenses.multiply(T(java.math.BigDecimal).valueOf(100)).divide(metrics.monthlyBudget, 2, T(java.math.RoundingMode).HALF_UP).doubleValue() : 0}"
+         th:classappend="${pct > 100 ? 'bg-danger' : 'bg-success'}"
+         th:style="'width: ' + (${pct > 100 ? 100 : pct}) + '%'">
+    </div>
 </div>
               </div>
             </div>
