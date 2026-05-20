@@ -1,237 +1,217 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - LedgerFlow</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — LedgerFlow</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+    .auth-layout {
+      flex: 1; display: flex; align-items: flex-start;
+      justify-content: center; padding: 2rem 1rem;
+    }
+    .auth-card {
+      width: 100%; max-width: 500px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      padding: 2.5rem;
+    }
+    .auth-header { text-align: center; margin-bottom: 2rem; }
+    .auth-logo {
+      width: 48px; height: 48px;
+      background: var(--accent); border-radius: var(--radius-md);
+      display: inline-flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.3rem; margin-bottom: 1rem;
+    }
+    .pwd-strength { height: 4px; border-radius: 2px; margin-top: 6px; transition: all 0.3s; }
+    .row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media(max-width:480px){ .row-2col { grid-template-columns: 1fr; } }
+  </style>
 </head>
-<body class="bg-light">
-    <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-6 col-lg-5">
-                <div class="card shadow">
-                    <div class="card-header text-center">
-                        <h4><i class="fas fa-user-plus"></i> Create Account</h4>
-                    </div>
-                    <div class="card-body">
-                        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-                        
-                        <form th:action="@{/register}" th:object="${user}" method="post" id="registerForm" onsubmit="return validateForm()">
-                            <div class="mb-3">
-                                <label for="fullName" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="fullName" th:field="*{fullName}" required>
-                                <div class="invalid-feedback">Full name must contain only letters and spaces</div>
-                                <div class="text-danger" th:errors="*{fullName}"></div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" th:field="*{username}" required pattern="^[a-zA-Z][a-zA-Z0-9]*$">
-                                <small class="text-muted">Username must start with a letter and contain only letters and numbers</small>
-                                <div class="invalid-feedback">Username must start with a letter and contain only letters and numbers</div>
-                                <div class="text-danger" th:errors="*{username}"></div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" th:field="*{email}" required>
-                                <div class="invalid-feedback">Please enter a valid email address</div>
-                                <div class="text-danger" th:errors="*{email}"></div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="phoneNumber" class="form-label">Phone Number (Optional)</label>
-                                <input type="tel" class="form-control" id="phoneNumber" th:field="*{phoneNumber}" pattern="^[0-9]{10}$">
-                                <small class="text-muted">10-digit mobile number (optional)</small>
-                                <div class="invalid-feedback">Please enter a valid 10-digit phone number</div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" th:field="*{password}" required>
-                                <small class="text-muted">
-                                    Password must contain at least 6 characters, including uppercase, lowercase, number, and special character
-                                </small>
-                                <div class="invalid-feedback">Password must contain at least 6 characters, including uppercase, lowercase, number, and special character</div>
-                                <div class="text-danger" th:errors="*{password}"></div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="confirmPassword" class="form-label">Confirm Password</label>
-                                <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" required>
-                                <div class="invalid-feedback">Passwords do not match</div>
-                                <div class="text-danger" th:errors="*{confirmPassword}"></div>
-                            </div>
-                            
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="terms" required>
-                                <label class="form-check-label" for="terms">
-                                    I agree to the <a href="#">Terms and Conditions</a>
-                                </label>
-                                <div class="invalid-feedback">You must agree to the terms and conditions</div>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary w-100">Register</button>
-                        </form>
-                        
-                        <hr>
-                        <div class="text-center">
-                            <p class="mb-0">Already have an account? <a th:href="@{/login}" class="text-primary">Login here</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<body>
+  <nav class="navbar">
+    <div class="container d-flex align-items-center justify-content-between">
+      <a class="navbar-brand" th:href="@{/}">
+        <span class="brand-icon"><i class="fas fa-chart-line"></i></span>
+        LedgerFlow
+      </a>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+        <i class="fas fa-moon" id="themeIcon"></i>
+      </button>
     </div>
-    
-    <script>
-        function validateForm() {
-            let isValid = true;
-            
-            // Validate full name (only letters and spaces)
-            const fullName = document.getElementById('fullName');
-            const nameRegex = /^[a-zA-Z\s]+$/;
-            if (!nameRegex.test(fullName.value)) {
-                fullName.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                fullName.classList.remove('is-invalid');
-            }
-            
-            // Validate username (start with letter, only letters and numbers)
-            const username = document.getElementById('username');
-            const usernameRegex = /^[a-zA-Z][a-zA-Z0-9]*$/;
-            if (!usernameRegex.test(username.value)) {
-                username.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                username.classList.remove('is-invalid');
-            }
-            
-            // Validate email
-            const email = document.getElementById('email');
-            const emailRegex = /^[A-Za-z0-9+_.-]+@(.+)$/;
-            if (!emailRegex.test(email.value)) {
-                email.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                email.classList.remove('is-invalid');
-            }
-            
-            // Validate phone number (optional)
-            const phone = document.getElementById('phoneNumber');
-            if (phone.value) {
-                const phoneRegex = /^[0-9]{10}$/;
-                if (!phoneRegex.test(phone.value)) {
-                    phone.classList.add('is-invalid');
-                    isValid = false;
-                } else {
-                    phone.classList.remove('is-invalid');
-                }
-            }
-            
-            // Validate password (at least 6 chars, 1 uppercase, 1 lowercase, 1 number, 1 special)
-            const password = document.getElementById('password');
-            const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{6,}$/;
-            if (!passwordRegex.test(password.value)) {
-                password.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                password.classList.remove('is-invalid');
-            }
-            
-            // Validate password confirmation
-            const confirmPassword = document.getElementById('confirmPassword');
-            if (password.value !== confirmPassword.value) {
-                confirmPassword.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                confirmPassword.classList.remove('is-invalid');
-            }
-            
-            // Validate terms checkbox
-            const terms = document.getElementById('terms');
-            if (!terms.checked) {
-                terms.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                terms.classList.remove('is-invalid');
-            }
-            
-            return isValid;
-        }
-        
-        // Real-time validation
-        document.getElementById('fullName').addEventListener('input', function() {
-            const nameRegex = /^[a-zA-Z\s]+$/;
-            if (!nameRegex.test(this.value)) {
-                this.classList.add('is-invalid');
-            } else {
-                this.classList.remove('is-invalid');
-            }
-        });
-        
-        document.getElementById('username').addEventListener('input', function() {
-            const usernameRegex = /^[a-zA-Z][a-zA-Z0-9]*$/;
-            if (!usernameRegex.test(this.value)) {
-                this.classList.add('is-invalid');
-            } else {
-                this.classList.remove('is-invalid');
-            }
-        });
-        
-        document.getElementById('email').addEventListener('input', function() {
-            const emailRegex = /^[A-Za-z0-9+_.-]+@(.+)$/;
-            if (!emailRegex.test(this.value)) {
-                this.classList.add('is-invalid');
-            } else {
-                this.classList.remove('is-invalid');
-            }
-        });
-        
-        document.getElementById('phoneNumber').addEventListener('input', function() {
-            if (this.value) {
-                const phoneRegex = /^[0-9]{10}$/;
-                if (!phoneRegex.test(this.value)) {
-                    this.classList.add('is-invalid');
-                } else {
-                    this.classList.remove('is-invalid');
-                }
-            } else {
-                this.classList.remove('is-invalid');
-            }
-        });
-        
-        document.getElementById('password').addEventListener('input', function() {
-            const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{6,}$/;
-            if (!passwordRegex.test(this.value)) {
-                this.classList.add('is-invalid');
-            } else {
-                this.classList.remove('is-invalid');
-            }
-            
-            // Also check confirmation password
-            const confirmPassword = document.getElementById('confirmPassword');
-            if (confirmPassword.value && this.value !== confirmPassword.value) {
-                confirmPassword.classList.add('is-invalid');
-            } else if (confirmPassword.value) {
-                confirmPassword.classList.remove('is-invalid');
-            }
-        });
-        
-        document.getElementById('confirmPassword').addEventListener('input', function() {
-            const password = document.getElementById('password');
-            if (password.value !== this.value) {
-                this.classList.add('is-invalid');
-            } else {
-                this.classList.remove('is-invalid');
-            }
-        });
-    </script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  </nav>
+
+  <div class="auth-layout">
+    <div class="auth-card fade-up">
+      <div class="auth-header">
+        <div class="auth-logo"><i class="fas fa-user-plus"></i></div>
+        <h4 style="font-weight:700;margin-bottom:4px;">Create your account</h4>
+        <p style="color:var(--text-muted);font-size:0.875rem;margin:0;">Start managing your finances today</p>
+      </div>
+
+      <div th:if="${error}" class="alert alert-danger auto-dismiss mb-3">
+        <i class="fas fa-circle-exclamation me-2"></i><span th:text="${error}"></span>
+      </div>
+
+      <form th:action="@{/register}" th:object="${user}" method="post" id="registerForm" onsubmit="return validateForm()">
+
+        <div class="row-2col mb-3">
+          <div>
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="fullName" th:field="*{fullName}"
+                   placeholder="John Doe" required>
+            <div class="invalid-feedback">Letters and spaces only</div>
+            <div class="text-danger" style="font-size:0.8rem;" th:errors="*{fullName}"></div>
+          </div>
+          <div>
+            <label class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" th:field="*{username}"
+                   placeholder="johndoe" required pattern="^[a-zA-Z][a-zA-Z0-9]*$">
+            <div class="invalid-feedback">Start with letter, letters/numbers only</div>
+            <div class="text-danger" style="font-size:0.8rem;" th:errors="*{username}"></div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-control" id="email" th:field="*{email}"
+                 placeholder="john@example.com" required>
+          <div class="invalid-feedback">Please enter a valid email</div>
+          <div class="text-danger" style="font-size:0.8rem;" th:errors="*{email}"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Phone Number <span style="color:var(--text-muted);font-weight:400;text-transform:none;">(Optional)</span></label>
+          <input type="tel" class="form-control" id="phoneNumber" th:field="*{phoneNumber}"
+                 placeholder="10-digit number" pattern="^[0-9]{10}$">
+          <div class="invalid-feedback">Must be 10 digits</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <div class="position-relative">
+            <input type="password" class="form-control" id="password" th:field="*{password}"
+                   placeholder="Create a strong password" required style="padding-right:42px;">
+            <button type="button" onclick="togglePwd('password','eye1')"
+                    style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0;">
+              <i id="eye1" class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div class="pwd-strength mt-1" id="pwdStrength"></div>
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;" id="pwdHint">
+            Min 6 chars · uppercase · lowercase · number · special char
+          </div>
+          <div class="text-danger" style="font-size:0.8rem;" th:errors="*{password}"></div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Confirm Password</label>
+          <div class="position-relative">
+            <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}"
+                   placeholder="Repeat password" required style="padding-right:42px;">
+            <button type="button" onclick="togglePwd('confirmPassword','eye2')"
+                    style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0;">
+              <i id="eye2" class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div class="invalid-feedback">Passwords don't match</div>
+        </div>
+
+        <div class="mb-4 d-flex align-items-start gap-2">
+          <input type="checkbox" class="form-check-input mt-1" id="terms" required>
+          <label class="form-check-label" for="terms" style="font-size:0.875rem;color:var(--text-secondary);">
+            I agree to the <a href="#" style="color:var(--accent);">Terms and Conditions</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100" style="justify-content:center;">
+          Create Account
+        </button>
+      </form>
+
+      <div class="text-center mt-3" style="color:var(--text-muted);font-size:0.875rem;">
+        Already have an account?
+        <a th:href="@{/login}" style="color:var(--accent);font-weight:600;text-decoration:none;">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script th:src="@{/js/dashboard.js}"></script>
+  <script>
+    function togglePwd(inputId, iconId) {
+      const inp = document.getElementById(inputId);
+      const ico = document.getElementById(iconId);
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+      ico.className = inp.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+    }
+
+    // Password strength
+    document.getElementById('password').addEventListener('input', function() {
+      const v = this.value;
+      const bar = document.getElementById('pwdStrength');
+      const hint = document.getElementById('pwdHint');
+      let score = 0;
+      if (v.length >= 6) score++;
+      if (/[A-Z]/.test(v)) score++;
+      if (/[a-z]/.test(v)) score++;
+      if (/[0-9]/.test(v)) score++;
+      if (/[@#$%^&+=!]/.test(v)) score++;
+
+      const colors = ['#e2e8f0','#ef4444','#f59e0b','#eab308','#10b981','#059669'];
+      const labels = ['','Weak','Fair','Good','Strong','Very Strong'];
+      bar.style.width = (score * 20) + '%';
+      bar.style.backgroundColor = colors[score];
+      bar.style.height = '4px';
+      bar.style.borderRadius = '2px';
+      hint.textContent = labels[score] || 'Min 6 chars · uppercase · lowercase · number · special char';
+      hint.style.color = colors[score] || 'var(--text-muted)';
+    });
+
+    function validateForm() {
+      let valid = true;
+      const checks = [
+        { id: 'fullName',        re: /^[a-zA-Z\s]+$/,              msg: '' },
+        { id: 'username',        re: /^[a-zA-Z][a-zA-Z0-9]*$/,    msg: '' },
+        { id: 'email',           re: /^[A-Za-z0-9+_.-]+@.+\..+$/,  msg: '' },
+        { id: 'password',        re: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{6,}$/, msg: '' },
+      ];
+      checks.forEach(c => {
+        const el = document.getElementById(c.id);
+        if (!c.re.test(el.value)) { el.classList.add('is-invalid'); valid = false; }
+        else el.classList.remove('is-invalid');
+      });
+
+      // Phone optional
+      const phone = document.getElementById('phoneNumber');
+      if (phone.value && !/^[0-9]{10}$/.test(phone.value)) {
+        phone.classList.add('is-invalid'); valid = false;
+      } else phone.classList.remove('is-invalid');
+
+      // Confirm password
+      const p = document.getElementById('password');
+      const cp = document.getElementById('confirmPassword');
+      if (p.value !== cp.value) { cp.classList.add('is-invalid'); valid = false; }
+      else cp.classList.remove('is-invalid');
+
+      const terms = document.getElementById('terms');
+      if (!terms.checked) { terms.classList.add('is-invalid'); valid = false; }
+      else terms.classList.remove('is-invalid');
+
+      return valid;
+    }
+
+    // Real-time field validation
+    ['fullName','username','email','password','confirmPassword','phoneNumber'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('blur', validateForm);
+    });
+  </script>
 </body>
 </html>
